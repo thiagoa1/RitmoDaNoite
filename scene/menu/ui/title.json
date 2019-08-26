@@ -1,153 +1,33 @@
 { "backgroundcolor":"#3b97d3",
  "height":26,
+ "infinite":false,
  "layers":[
         {
          "draworder":"topdown",
-         "height":26,
+         "id":1,
          "name":"background",
          "objects":[
                 {
-                 "gid":7,
-                 "height":262.666666666667,
-                 "id":11,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1736,
-                 "x":-256,
-                 "y":920.666666666667
-                }, 
-                {
                  "gid":6,
-                 "height":832,
+                 "height":835,
                  "id":34,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":1216,
-                 "x":122,
-                 "y":810
+                 "x":0,
+                 "y":834
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":38,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":26,
-         "name":"clouds",
-         "objects":[
-                {
-                 "gid":8,
-                 "height":61.3333333333333,
-                 "id":14,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":184,
-                 "x":640,
-                 "y":320
-                }, 
-                {
-                 "gid":8,
-                 "height":61.3333333333333,
-                 "id":17,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":184,
-                 "x":336,
-                 "y":144
-                }, 
-                {
-                 "gid":8,
-                 "height":61.3333333333333,
-                 "id":21,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":192,
-                 "x":1024,
-                 "y":145
-                }, 
-                {
-                 "gid":2147483656,
-                 "height":61.3333333333333,
-                 "id":23,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":184,
-                 "x":44,
-                 "y":136
-                }, 
-                {
-                 "gid":6,
-                 "height":600,
-                 "id":8,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":954,
-                 "x":-226,
-                 "y":768
-                }, 
-                {
-                 "gid":2147483654,
-                 "height":546,
-                 "id":35,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":826,
-                 "x":710,
-                 "y":782
-                }, 
-                {
-                 "gid":2147483656,
-                 "height":103.333333333333,
-                 "id":36,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":284,
-                 "x":926,
-                 "y":307
-                }, 
-                {
-                 "gid":8,
-                 "height":103.333333333333,
-                 "id":37,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":284,
-                 "x":124,
-                 "y":353
-                }],
-         "opacity":0.490000009536743,
-         "type":"objectgroup",
-         "visible":true,
-         "width":38,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "height":38,
+         "id":3,
          "name":"title",
          "objects":[
                 {
@@ -164,14 +44,13 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
-         "width":25,
+         "visible":false,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":26,
+         "id":4,
          "name":"help",
          "objects":[
                 {
@@ -189,13 +68,12 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":false,
-         "width":38,
          "x":0,
          "y":0
         }, 
         {
          "draworder":"topdown",
-         "height":38,
+         "id":5,
          "name":"buttons",
          "objects":[
                 {
@@ -225,13 +103,14 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "width":26,
          "x":0,
          "y":0
         }],
+ "nextlayerid":6,
  "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
+ "tiledversion":"1.2.4",
  "tileheight":32,
  "tilesets":[
         {
@@ -242,40 +121,53 @@
          "spacing":0,
          "tilecount":7,
          "tileheight":832,
-         "tiles":
-            {
-             "0":
+         "tiles":[
                 {
-                 "image":"buttonHelp.png"
-                },
-             "1":
+                 "id":0,
+                 "image":"buttonHelp.png",
+                 "imageheight":64,
+                 "imagewidth":192
+                }, 
                 {
-                 "image":"buttonStart.png"
-                },
-             "2":
+                 "id":1,
+                 "image":"buttonStart.png",
+                 "imageheight":64,
+                 "imagewidth":192
+                }, 
                 {
-                 "image":"helpBackground.png"
-                },
-             "3":
+                 "id":2,
+                 "image":"helpBackground.png",
+                 "imageheight":416,
+                 "imagewidth":416
+                }, 
                 {
-                 "image":"title.png"
-                },
-             "5":
+                 "id":3,
+                 "image":"title.png",
+                 "imageheight":224,
+                 "imagewidth":448
+                }, 
                 {
-                 "image":"backgroundSet.png"
-                },
-             "6":
+                 "id":5,
+                 "image":"dance floor temp.png",
+                 "imageheight":576,
+                 "imagewidth":1024
+                }, 
                 {
-                 "image":"block.png"
-                },
-             "7":
+                 "id":6,
+                 "image":"block.png",
+                 "imageheight":64,
+                 "imagewidth":64
+                }, 
                 {
-                 "image":"cloud.png"
-                }
-            },
+                 "id":7,
+                 "image":"cloud.png",
+                 "imageheight":128,
+                 "imagewidth":384
+                }],
          "tilewidth":1232
         }],
  "tilewidth":32,
- "version":1,
+ "type":"map",
+ "version":1.2,
  "width":38
 }
