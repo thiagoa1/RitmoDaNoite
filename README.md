@@ -42,3 +42,13 @@ O jogo é controlado por toques na tela em lugares específicos.
 https://www.brandcrowd.com/maker/logo/2aed9145-e243-41af-8db1-ed0f8e6a6f10
 
 <a href="https://www.freepik.com/free-photos-vectors/abstract">Abstract vector created by freepik - www.freepik.com</a>
+
+* Recursos
+
+https://assetstore.unity.com/packages/2d/environments/warped-city-assets-pack-138128 - http://ansimuz.com
+http://pixelgameart.org/web/
+http://pixelgameart.org/web/portfolio/warped-city/
+
+https://engfto.com/index/animated_neon_text_maker/0-27  
+
+https://engfto.com/index/generator_reality_glow_text_neon_effect/0-96
