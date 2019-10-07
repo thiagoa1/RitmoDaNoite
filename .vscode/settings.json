@@ -7,5 +7,11 @@
         "activityBarBadge.foreground": "#e7e7e7",
         "tab.activeBorder": "#0000af"
     },
-    "peacock.color": "#00007c"
+    "peacock.color": "#00007c",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    }
 }
