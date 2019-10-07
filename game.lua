@@ -53,8 +53,8 @@ local spawnParams = {
     xMax = 300,
     yMin = 20,
     yMax = 460,
-    spawnTime = 500,
-    spawnOnTimer = 12,
+    spawnTime = 2000,
+    spawnOnTimer = 50,
     spawnInitial = 4
 }
 
@@ -80,9 +80,13 @@ local enemyCount = 0
 
 -- Spawn an enemy
 local function spawnBlueEnemy()
-
-    -- Create an item
-    local blueEnemy = display.newSprite( blueEnemy_run, enemy_sequence )
+    local blueEnemy
+    if (math.random() > 0.5 ) then
+        blueEnemy = display.newSprite( blueEnemy_run, enemy_sequence )
+    else
+        blueEnemy = display.newSprite( greenEnemy_run, enemy_sequence )
+    end
+     
 
 --    print("bounds: ", bounds.xMin, bounds.xMax, bounds.yMin, bounds.yMax)
 
@@ -128,7 +132,7 @@ local function spawnController( action, params )
  
         -- Gather/set other spawning params
         local spawnTime = params.spawnTime or 1000
-        local spawnOnTimer = params.spawnOnTimer or 50
+        local spawnOnTimer = params.spawnOnTimer -- or 50
         local spawnInitial = params.spawnInitial or 0
  
         -- If "spawnInitial" is greater than 0, spawn that many item(s) instantly
@@ -216,7 +220,7 @@ function scene:create( event )
     idleChar.name = "char"
     idleChar:play()
 
-    physics.addBody( idleChar, { density=3.0, friction=100, bounce=0 } )
+    physics.addBody( idleChar, "static")
 
     -- spawnBlueEnemy()
     spawnController( "start", spawnParams )
