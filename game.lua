@@ -4,7 +4,17 @@ physics.start()
 physics.setGravity( 0, 0 )
 
 local composer = require("composer")
+local fx = require( "com.ponywolf.ponyfx" )
+
 local scene = composer.newScene()
+
+local bgMusic
+
+-- local hitSound = audio.loadSound( "sfx/Boss hit 1.wav" )
+local hitSound = audio.loadSound( "sfx/hit15.mp3.flac" )
+
+-- local missSound = audio.loadSound( "sfx/Hit damage 1.wav" )
+local missSound = audio.loadSound( "sfx/hit26.mp3.flac" )
 
 local charOptions = {
     width = 71,
@@ -23,7 +33,6 @@ local char8Options = {
 }
 
 local char_idle = graphics.newImageSheet( "player/idle/idle.png", charOptions )
-
 local char_jump = graphics.newImageSheet( "player/jump/jump.png", charOptions )
 
 -- ============================== Spawn de inimigos
@@ -55,7 +64,7 @@ local spawnParams = {
     yMax = 460,
     spawnTime = 2000,
     spawnOnTimer = 50,
-    spawnInitial = 4
+    spawnInitial = 1
 }
 
 --local bounds = {
@@ -64,13 +73,30 @@ local spawnParams = {
 --    yMin = 0,
 --    yMax = display.contentHeight,
 --}
+local score = 0
+local scoreText = display.newText( score, 915, 35, native.systemFont, 50 )
+scoreText:setFillColor( 1, 1, 1  )
 
 local function onLocalPreCollision( self, event )
    -- if ( event.phase == "began" ) then
-        display.remove( self )
-        print( self.name .. ": precollision with " .. event.other.name )
+   local target = event.other
+    print( self.name .. ": precollision with " .. target.name )
 
- 
+    if (target.name == "char") then
+        display.remove( self )
+
+        if (target.sequence == "jump") then
+            score = score + 10
+            audio.play( hitSound )
+        else 
+            score = score - 10
+            audio.play( missSound )            
+        end
+
+        scoreText.text = score
+
+        print( event.other.sequence )
+    end
 --    elseif ( event.phase == "ended" ) then
 --        print( self.name .. ": collision ended with " .. event.other.name )
     --end
@@ -102,7 +128,7 @@ local function spawnBlueEnemy()
     --idleChar.y = display.contentCenterY + 80
     blueEnemy:play()
 
-    physics.addBody( blueEnemy, { density=3.0, friction=0.5, bounce=0.3 } )
+    physics.addBody( blueEnemy, { density=3.0, friction=0.5, bounce=0.3 } ) 
     blueEnemy.preCollision  = onLocalPreCollision
     blueEnemy:addEventListener( "preCollision" )
 
@@ -175,8 +201,9 @@ local char_sequence = {
     {
         name = "jump",
         sheet = char_jump,
-        start = 1,
-        count = 4,
+        --start = 1,
+        --count = 4,
+        frames= { 4, 3, 2, 1 }, -- frame indexes of animation, in image sheet
         time = 400,
         loopCount = 1,
         loopDirection = "forward"
@@ -206,6 +233,8 @@ idleChar:addEventListener( "sprite", spriteListener )
 
 function scene:create( event )
     local sceneGroup = self.view
+
+    bgMusic = audio.loadSound( "music/ingame.mp3" )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     local background = display.newImageRect(sceneGroup, "img/background.png", display.actualContentWidth, display.actualContentHeight )
@@ -251,6 +280,40 @@ leftButton:setStrokeColor( 0, 0.5 )
 leftButton:setFillColor( 1, 0.53, 0.96, 0.5 )
 leftButton:addEventListener( "tap", leftTapListener )
 
+
+-- This function is called when scene comes fully on screen
+function scene:show( event )
+	local phase = event.phase
+	if ( phase == "will" ) then
+		fx.fadeIn()
+		-- add enterFrame listener
+    elseif ( phase == "did" ) then
+        timer.performWithDelay( 10, function()
+            audio.play( bgMusic, { loops = -1, channel = 1 } )
+		    audio.fade({ channel = 1, time = 333, volume = 1.0 } )
+		end)
+	end
+end
+
+-- This function is called when scene goes fully off screen
+function scene:hide( event )
+	local phase = event.phase
+	if ( phase == "will" ) then
+		audio.fadeOut( { channel = 1, time = 500 } )
+	elseif ( phase == "did" ) then
+		
+	end
+end
+
+function scene:destroy( event )
+	audio.stop()  -- Stop all audio
+	audio.dispose( bgMusic )  -- Release music handle
+end
+
+
 scene:addEventListener( "create", scene )
+scene:addEventListener( "show", scene )
+scene:addEventListener( "hide", scene )
+scene:addEventListener( "destroy", scene )
 
 return scene

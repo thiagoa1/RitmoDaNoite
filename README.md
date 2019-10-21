@@ -52,3 +52,14 @@ http://pixelgameart.org/web/portfolio/warped-city/
 https://engfto.com/index/animated_neon_text_maker/0-27  
 
 https://engfto.com/index/generator_reality_glow_text_neon_effect/0-96
+
+* Música
+https://freemusicarchive.org/music/sawsquarenoise/Towel_Defence_OST
+
+* Audio
+https://jdwasabi.itch.io/8-bit-16-bit-sound-effects-pack ?
+https://kentaroo.itch.io/free-sfx ?
+http://99sounds.org/fight-sound-effects/ ?
+https://opengameart.org/content/37-hitspunches oK
+https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks ?
+https://opengameart.org/content/gui-sound-effects ?
