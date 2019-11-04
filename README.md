@@ -63,3 +63,9 @@ http://99sounds.org/fight-sound-effects/ ?
 https://opengameart.org/content/37-hitspunches oK
 https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks ?
 https://opengameart.org/content/gui-sound-effects ?
+https://opengameart.org/content/punch-slap-n-kick ?
+https://opengameart.org/content/punches-hits-swords-and-squishes ?  
+https://www.youtube.com/audiolibrary/ ?
+https://opengameart.org/content/female-screams ?
+https://opengameart.org/content/female-gruntwork-1  
+https://freesound.org/people/AmeAngelofSin/sounds/264982/ OK

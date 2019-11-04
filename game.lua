@@ -9,12 +9,29 @@ local fx = require( "com.ponywolf.ponyfx" )
 local scene = composer.newScene()
 
 local bgMusic
+local idleChar
+local spawnTimer
+
+local missTimes
+
+local hearts
+
+local score
+local scoreText
+
+local enemyCount
 
 -- local hitSound = audio.loadSound( "sfx/Boss hit 1.wav" )
 local hitSound = audio.loadSound( "sfx/hit15.mp3.flac" )
 
 -- local missSound = audio.loadSound( "sfx/Hit damage 1.wav" )
 local missSound = audio.loadSound( "sfx/hit26.mp3.flac" )
+
+local gruntSounds = {
+    grunt1 = audio.loadSound( "sfx/ah.mp3" ),
+    grunt2 = audio.loadSound( "sfx/ah2.mp3" ),
+    grunt3 = audio.loadSound( "sfx/uh.mp3" )
+}
 
 local charOptions = {
     width = 71,
@@ -36,8 +53,7 @@ local char_idle = graphics.newImageSheet( "player/idle/idle.png", charOptions )
 local char_jump = graphics.newImageSheet( "player/jump/jump.png", charOptions )
 
 -- ============================== Spawn de inimigos
-local spawnTimer
-local spawnedObjects = {}
+local spawnedObjects
 -- Seed the random number generator
 math.randomseed( os.time() )
 
@@ -67,30 +83,48 @@ local spawnParams = {
     spawnInitial = 1
 }
 
---local bounds = {
---    xMin = 0,
---    xMax = display.contentWidth,
---    yMin = 0,
---    yMax = display.contentHeight,
---}
-local score = 0
-local scoreText = display.newText( score, 915, 35, native.systemFont, 50 )
-scoreText:setFillColor( 1, 1, 1  )
+local maxLifes = 5
 
-local function onLocalPreCollision( self, event )
+local function onLocalCollision( self, event )
    -- if ( event.phase == "began" ) then
    local target = event.other
-    print( self.name .. ": precollision with " .. target.name )
+    print( self.name .. ": collision with " .. target.name )
 
     if (target.name == "char") then
         display.remove( self )
 
-        if (target.sequence == "jump") then
-            score = score + 10
-            audio.play( hitSound )
-        else 
-            score = score - 10
-            audio.play( missSound )            
+        if (self.name:find("^leftEnemy")) then
+            if (target.sequence == "left_jump") then
+                score = score + 10
+                audio.play( hitSound )
+            else
+                missTimes = missTimes + 1
+    
+                display.remove(hearts[missTimes])
+    
+                audio.play( missSound )
+                audio.play(gruntSounds[math.random(1, 3)])
+    
+                if (missTimes == maxLifes) then
+                    gameover()
+                end
+            end
+        elseif (self.name:find("^rightEnemy")) then
+            if (target.sequence == "right_jump") then
+                score = score + 10
+                audio.play( hitSound )
+            else
+                missTimes = missTimes + 1
+    
+                display.remove(hearts[missTimes])
+    
+                audio.play( missSound )
+                audio.play(gruntSounds[math.random(1, 3)])
+    
+                if (missTimes == maxLifes) then
+                    gameover()
+                end
+            end
         end
 
         scoreText.text = score
@@ -102,59 +136,103 @@ local function onLocalPreCollision( self, event )
     --end
 end
 
-local enemyCount = 0
+function gameover()
+    spawnController(nil, "stop", nil )
+    spawnTimer = nil
+    for i, spawnObj in ipairs(spawnedObjects) do
+        display.remove(spawnObj)
+        print("Removing enemy: " .. spawnObj.name .. " ".. i )
+    end
+
+    composer.gotoScene( "gameover" )
+end
 
 -- Spawn an enemy
-local function spawnBlueEnemy()
-    local blueEnemy
+function spawnLeftEnemy(sceneGroup)
+    local leftEnemy
     if (math.random() > 0.5 ) then
-        blueEnemy = display.newSprite( blueEnemy_run, enemy_sequence )
+        leftEnemy = display.newSprite(sceneGroup, blueEnemy_run, enemy_sequence )
     else
-        blueEnemy = display.newSprite( greenEnemy_run, enemy_sequence )
+        leftEnemy = display.newSprite(sceneGroup, greenEnemy_run, enemy_sequence )
     end
-     
+
+--    print("bounds: ", bounds.xMin, bounds.xMax, bounds.yMin, bounds.yMax)
+
+    -- Position item randomly within set bounds
+    --leftEnem.x = math.random( bounds.xMin, bounds.xMax )
+    --leftEnem.y = math.random( bounds.yMin, bounds.yMax )
+    leftEnemy.x = display.screenOriginX
+    leftEnemy.y = display.contentCenterY + 80
+    leftEnemy.xScale = 4
+    leftEnemy.yScale = 4
+    leftEnemy.name = "leftEnemy" .. enemyCount
+    --idleChar.x = display.contentCenterX
+    --idleChar.y = display.contentCenterY + 80
+    leftEnemy:play()
+
+    physics.addBody( leftEnemy, { density=3.0, friction=0.5, bounce=0.3 } )
+    leftEnemy.collision  = onLocalCollision
+    leftEnemy:addEventListener( "collision" )
+
+    transition.to(leftEnemy, {x=display.contentCenterX, y=display.contentCenterY + 80, time=1000})
+    
+    -- Add item to "spawnedObjects" table for tracking purposes
+    spawnedObjects[enemyCount] = leftEnemy
+    enemyCount = enemyCount + 1
+end
+
+function spawnRightEnemy(sceneGroup)
+    local rightEnemy
+    if (math.random() > 0.5 ) then
+        rightEnemy = display.newSprite(sceneGroup, blueEnemy_run, enemy_sequence )
+    else
+        rightEnemy = display.newSprite(sceneGroup, greenEnemy_run, enemy_sequence )
+    end
 
 --    print("bounds: ", bounds.xMin, bounds.xMax, bounds.yMin, bounds.yMax)
 
     -- Position item randomly within set bounds
     --blueEnemy.x = math.random( bounds.xMin, bounds.xMax )
     --blueEnemy.y = math.random( bounds.yMin, bounds.yMax )
-    blueEnemy.x = display.screenOriginX
-    blueEnemy.y = display.contentCenterY + 80
-    blueEnemy.xScale = 4
-    blueEnemy.yScale = 4
-    blueEnemy.name = "blueEnemy" .. enemyCount
+    rightEnemy.x = display.actualContentWidth
+    rightEnemy.y = display.contentCenterY + 80
+    rightEnemy.xScale = -4
+    rightEnemy.yScale = 4
+    rightEnemy.name = "rightEnemy" .. enemyCount
     --idleChar.x = display.contentCenterX
     --idleChar.y = display.contentCenterY + 80
-    blueEnemy:play()
+    rightEnemy:play()
 
-    physics.addBody( blueEnemy, { density=3.0, friction=0.5, bounce=0.3 } ) 
-    blueEnemy.preCollision  = onLocalPreCollision
-    blueEnemy:addEventListener( "preCollision" )
+    physics.addBody( rightEnemy, { density=3.0, friction=0.5, bounce=0.3 } )
+    rightEnemy.collision  = onLocalCollision
+    rightEnemy:addEventListener( "collision" )
 
-    transition.to(blueEnemy, {x=display.contentCenterX, y=display.contentCenterY + 80, time=1000})
+    transition.to(rightEnemy, {x=display.contentCenterX, y=display.contentCenterY + 80, time=1000})
     
     -- Add item to "spawnedObjects" table for tracking purposes
-    spawnedObjects[enemyCount] = blueEnemy
+    spawnedObjects[enemyCount] = rightEnemy
     enemyCount = enemyCount + 1
 end
 
-local function spawnController( action, params )
- 
-    -- Cancel timer on "start" or "stop", if it exists
+function spawnController(sceneGroup, action, params )
+     -- Cancel timer on "start" or "stop", if it exists
+     print(1)
+     print(spawnTimer)
+     print(action)
     if ( spawnTimer and ( action == "start" or action == "stop" ) ) then
         timer.cancel( spawnTimer )
+        print(2)
     end
  
     -- Start spawning
     if ( action == "start" ) then
  
         -- Gather/set spawning bounds
-        local spawnBounds = {}
-        spawnBounds.xMin = params.xMin or 0
-        spawnBounds.xMax = params.xMax or display.actualContentWidth
-        spawnBounds.yMin = params.yMin or 0
-        spawnBounds.yMax = params.yMax or display.actualContentHeight
+        local leftSpawnBounds = {}
+        leftSpawnBounds.xMin = params.xMin or 0
+        leftSpawnBounds.xMax = params.xMax or display.actualContentWidth
+        leftSpawnBounds.yMin = params.yMin or 0
+        leftSpawnBounds.yMax = params.yMax or display.actualContentHeight
  
         -- Gather/set other spawning params
         local spawnTime = params.spawnTime or 1000
@@ -164,14 +242,14 @@ local function spawnController( action, params )
         -- If "spawnInitial" is greater than 0, spawn that many item(s) instantly
         if ( spawnInitial > 0 ) then
             for n = 1,spawnInitial do
-                spawnBlueEnemy( )
+                spawnLeftEnemy( sceneGroup )
             end
         end
  
         -- Start repeating timer to spawn items
         if ( spawnOnTimer > 0 ) then
             spawnTimer = timer.performWithDelay( spawnTime,
-                function() spawnBlueEnemy(); end,
+                function() spawnLeftEnemy(sceneGroup); spawnRightEnemy(sceneGroup); end,
             spawnOnTimer )
         end
  
@@ -199,7 +277,17 @@ local char_sequence = {
         loopDirection = "forward"
     },
     {
-        name = "jump",
+        name = "left_jump",
+        sheet = char_jump,
+        --start = 1,
+        --count = 4,
+        frames= { 4, 3, 2, 1 }, -- frame indexes of animation, in image sheet
+        time = 400,
+        loopCount = 1,
+        loopDirection = "forward"
+    },
+    {
+        name = "right_jump",
         sheet = char_jump,
         --start = 1,
         --count = 4,
@@ -210,17 +298,18 @@ local char_sequence = {
     }
 }
 
-local idleChar = display.newSprite( char_idle, char_sequence )
-
-
-local function jump()
-    idleChar:setSequence( "jump" )
+local function jump(left)
+    if (left) then
+        idleChar:setSequence( "left_jump" )
+    else
+        idleChar:setSequence( "right_jump" )
+    end
     idleChar:play()
     --idleChar:setSequence( "idle" )
     --idleChar:play()
 end
 
-local function spriteListener( event ) 
+local function spriteListener( event )
     local thisSprite = event.target  -- "event.target" references the sprite
  
     -- Go back to idle
@@ -229,7 +318,6 @@ local function spriteListener( event )
         thisSprite:play()  -- play the new sequence
     end
 end
-idleChar:addEventListener( "sprite", spriteListener )
 
 function scene:create( event )
     local sceneGroup = self.view
@@ -238,9 +326,26 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     local background = display.newImageRect(sceneGroup, "img/background.png", display.actualContentWidth, display.actualContentHeight )
-
     background.x = display.contentCenterX
     background.y = display.contentCenterY
+
+    spawnedObjects = {}
+    missTimes = 0
+    hearts = {}
+    score = 0
+    enemyCount = 0
+
+    createControllers(sceneGroup)
+
+    scoreText = display.newText(sceneGroup, score, 915, 35, native.systemFont, 50 )
+    scoreText:setFillColor( 1, 1, 1  )
+
+    for i=1, maxLifes do
+        hearts[i] = display.newImage(sceneGroup, "img/life.png", display.contentCenterX - 360 - (35 * i), 45)
+    end
+
+    idleChar = display.newSprite(sceneGroup, char_idle, char_sequence )
+    idleChar:addEventListener( "sprite", spriteListener )
 
     idleChar.xScale = 4
     idleChar.yScale = 4
@@ -251,35 +356,36 @@ function scene:create( event )
 
     physics.addBody( idleChar, "static")
 
-    -- spawnBlueEnemy()
-    spawnController( "start", spawnParams )
+    spawnController( sceneGroup, "start", spawnParams )
+    print(spawnTimer)
 end
 
 local function rightTapListener( event )
     -- Code executed when the button is tapped
     idleChar.xScale = 4
-    jump()
+    jump(false)
     return true
 end
 
 local function leftTapListener( event )
     idleChar.xScale = -4
-    jump()
+    jump(true)
     return true
 end
- 
-local rightButton = display.newCircle( display.contentCenterX + 500, display.contentCenterY + 230, 100 )
-rightButton.strokeWidth = 3
-rightButton:setStrokeColor( 0, 0.5 )
-rightButton:setFillColor( 1, 0.53, 0.96, 0.5 )
-rightButton:addEventListener( "tap", rightTapListener )
 
-local leftButton = display.newCircle( display.contentCenterX - 500, display.contentCenterY + 230, 100 )
-leftButton.strokeWidth = 3  
-leftButton:setStrokeColor( 0, 0.5 )
-leftButton:setFillColor( 1, 0.53, 0.96, 0.5 )
-leftButton:addEventListener( "tap", leftTapListener )
+function createControllers(sceneGroup)
+    local rightButton = display.newCircle( sceneGroup, display.contentCenterX + 500, display.contentCenterY + 230, 100 )
+    rightButton.strokeWidth = 3
+    rightButton:setStrokeColor( 0, 0.5 )
+    rightButton:setFillColor( 1, 0.53, 0.96, 0.5 )
+    rightButton:addEventListener( "tap", rightTapListener )
 
+    local leftButton = display.newCircle( sceneGroup, display.contentCenterX - 500, display.contentCenterY + 230, 100 )
+    leftButton.strokeWidth = 3  
+    leftButton:setStrokeColor( 0, 0.5 )
+    leftButton:setFillColor( 1, 0.53, 0.96, 0.5 )
+    leftButton:addEventListener( "tap", leftTapListener )
+end
 
 -- This function is called when scene comes fully on screen
 function scene:show( event )
