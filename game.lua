@@ -198,7 +198,7 @@ function spawnRightEnemy(sceneGroup)
     -- Position item randomly within set bounds
     --blueEnemy.x = math.random( bounds.xMin, bounds.xMax )
     --blueEnemy.y = math.random( bounds.yMin, bounds.yMax )
-    rightEnemy.x = display.actualContentWidth + math.random(0, 50)
+    rightEnemy.x = display.actualContentWidth + math.random(0, 350)
     rightEnemy.y = display.contentCenterY + 80
     rightEnemy.xScale = -4
     rightEnemy.yScale = 4
@@ -211,7 +211,7 @@ function spawnRightEnemy(sceneGroup)
     rightEnemy.collision  = onLocalCollision
     rightEnemy:addEventListener( "collision" )
 
-    local rTime = 700 + math.random(0, 500)
+    local rTime = 1400 + math.random(0, 500)
 
     transition.to(rightEnemy, {x=display.contentCenterX, y=display.contentCenterY + 80, time=rTime})
     
