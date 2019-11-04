@@ -6,6 +6,8 @@ local bgMusic
 local scene = composer.newScene()
 
 local function gotoGame()
+    composer.removeScene( "game")
+
     composer.gotoScene( "game" )
 end
 

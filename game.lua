@@ -139,10 +139,12 @@ end
 function gameover()
     spawnController(nil, "stop", nil )
     spawnTimer = nil
+    hearts = nil
     for i, spawnObj in ipairs(spawnedObjects) do
         display.remove(spawnObj)
         print("Removing enemy: " .. spawnObj.name .. " ".. i )
     end
+    spawnedObjects = nil
 
     composer.gotoScene( "gameover" )
 end
@@ -161,7 +163,7 @@ function spawnLeftEnemy(sceneGroup)
     -- Position item randomly within set bounds
     --leftEnem.x = math.random( bounds.xMin, bounds.xMax )
     --leftEnem.y = math.random( bounds.yMin, bounds.yMax )
-    leftEnemy.x = display.screenOriginX
+    leftEnemy.x = display.screenOriginX - math.random(0, 50)
     leftEnemy.y = display.contentCenterY + 80
     leftEnemy.xScale = 4
     leftEnemy.yScale = 4
@@ -174,7 +176,9 @@ function spawnLeftEnemy(sceneGroup)
     leftEnemy.collision  = onLocalCollision
     leftEnemy:addEventListener( "collision" )
 
-    transition.to(leftEnemy, {x=display.contentCenterX, y=display.contentCenterY + 80, time=1000})
+    local rTime = 700 + math.random(0, 500)
+
+    transition.to(leftEnemy, {x=display.contentCenterX, y=display.contentCenterY + 80, time=rTime})
     
     -- Add item to "spawnedObjects" table for tracking purposes
     spawnedObjects[enemyCount] = leftEnemy
@@ -194,7 +198,7 @@ function spawnRightEnemy(sceneGroup)
     -- Position item randomly within set bounds
     --blueEnemy.x = math.random( bounds.xMin, bounds.xMax )
     --blueEnemy.y = math.random( bounds.yMin, bounds.yMax )
-    rightEnemy.x = display.actualContentWidth
+    rightEnemy.x = display.actualContentWidth + math.random(0, 50)
     rightEnemy.y = display.contentCenterY + 80
     rightEnemy.xScale = -4
     rightEnemy.yScale = 4
@@ -207,7 +211,9 @@ function spawnRightEnemy(sceneGroup)
     rightEnemy.collision  = onLocalCollision
     rightEnemy:addEventListener( "collision" )
 
-    transition.to(rightEnemy, {x=display.contentCenterX, y=display.contentCenterY + 80, time=1000})
+    local rTime = 700 + math.random(0, 500)
+
+    transition.to(rightEnemy, {x=display.contentCenterX, y=display.contentCenterY + 80, time=rTime})
     
     -- Add item to "spawnedObjects" table for tracking purposes
     spawnedObjects[enemyCount] = rightEnemy
