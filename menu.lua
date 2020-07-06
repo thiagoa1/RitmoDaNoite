@@ -1,21 +1,40 @@
 local composer = require( "composer" )
 local fx = require( "com.ponywolf.ponyfx" )
 
+local preference = require("preference")
+
 local bgMusic
 
 local scene = composer.newScene()
 
 local function gotoGame()
-    composer.removeScene( "game")
+    composer.removeScene("game")
+    composer.gotoScene("game")
 
-    composer.gotoScene( "game" )
+    --composer.removeScene("gameover")
+    --composer.gotoScene("gameover")
 end
 
 local function gotoHighScores()
+    composer.removeScene("highscores")
     composer.gotoScene( "highscores" )
 end
 
 function scene:create( event )
+    composer.removeScene("highscores")
+    composer.removeScene("game")
+    composer.removeScene("gameover")
+
+    preference.save{lastScore=0}
+    --preference.save{lastScore=math.random(100)}
+
+    -- preference.save{highscores={0,0,0,0,0}} -- Para zerar scores
+    highscoresPref = preference.getValue("highscores")
+    if (highscoresPref == nil) then
+        preference.save{highscores={0,0,0,0,0}}
+        preference.save{highscoresNames={"","","","",""}}
+    end
+
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
     bgMusic = audio.loadStream("music/menu.mp3")
@@ -39,9 +58,9 @@ function scene:create( event )
     playButton:setFillColor( 1, 0.53, 0.96 )
     playButton:addEventListener( "tap", gotoGame )
  
-    --local rankingButton = display.newText( sceneGroup, "Ranking", display.contentCenterX, display.contentCenterY + 160, native.systemFont, 44 )
-    --rankingButton:setFillColor( 1, 0.53, 0.96 )
-    --rankingButton:addEventListener( "tap", gotoHighScores )
+    local rankingButton = display.newText( sceneGroup, "Ranking", display.contentCenterX, display.contentCenterY + 160, native.systemFont, 44 )
+    rankingButton:setFillColor( 1, 0.53, 0.96 )
+    rankingButton:addEventListener( "tap", gotoHighScores )
 end
 
 -- This function is called when scene comes fully on screen
@@ -64,15 +83,14 @@ function scene:hide( event )
 	local phase = event.phase
 	if ( phase == "will" ) then
         --start:removeEventListener( "tap" )
-		audio.fadeOut( { channel = 1, time = 500 } )
+		audio.fadeOut( { channel = 1, time = 333 } )
 	elseif ( phase == "did" ) then
-		
 	end
 end
 
 function scene:destroy( event )
 	audio.stop()  -- Stop all audio
-	audio.dispose( bgMusic )  -- Release music handle
+	-- audio.dispose( bgMusic )  -- Release music handle
 --s	Runtime:removeEventListener("key", key)
 end
 

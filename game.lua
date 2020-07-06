@@ -1,10 +1,13 @@
 system.activate( "multitouch" )
+
 local physics = require( "physics" )
 physics.start()
 physics.setGravity( 0, 0 )
 
 local composer = require("composer")
 local fx = require( "com.ponywolf.ponyfx" )
+
+local preference = require("preference")
 
 local scene = composer.newScene()
 
@@ -137,6 +140,8 @@ local function onLocalCollision( self, event )
 end
 
 function gameover()
+    preference.save{lastScore=score}
+
     spawnController(nil, "stop", nil )
     spawnTimer = nil
     hearts = nil
@@ -146,7 +151,8 @@ function gameover()
     end
     spawnedObjects = nil
 
-    composer.gotoScene( "gameover" )
+    composer.removeScene("gameover")
+    composer.gotoScene("gameover")
 end
 
 -- Spawn an enemy
@@ -222,12 +228,8 @@ end
 
 function spawnController(sceneGroup, action, params )
      -- Cancel timer on "start" or "stop", if it exists
-     print(1)
-     print(spawnTimer)
-     print(action)
     if ( spawnTimer and ( action == "start" or action == "stop" ) ) then
         timer.cancel( spawnTimer )
-        print(2)
     end
  
     -- Start spawning
@@ -347,7 +349,7 @@ function scene:create( event )
     scoreText:setFillColor( 1, 1, 1  )
 
     for i=1, maxLifes do
-        hearts[i] = display.newImage(sceneGroup, "img/life.png", display.contentCenterX - 360 - (35 * i), 45)
+        hearts[i] = display.newImage(sceneGroup, "img/life_48.png", display.contentCenterX - 340 - (48 * i), 45)
     end
 
     idleChar = display.newSprite(sceneGroup, char_idle, char_sequence )
@@ -401,8 +403,8 @@ function scene:show( event )
 		-- add enterFrame listener
     elseif ( phase == "did" ) then
         timer.performWithDelay( 10, function()
-            audio.play( bgMusic, { loops = -1, channel = 1 } )
-		    audio.fade({ channel = 1, time = 333, volume = 1.0 } )
+            audio.play( bgMusic, { loops = -1, channel = 3 } )
+		    audio.fade({ channel = 3, time = 333, volume = 1.0 } )
 		end)
 	end
 end
@@ -411,7 +413,7 @@ end
 function scene:hide( event )
 	local phase = event.phase
 	if ( phase == "will" ) then
-		audio.fadeOut( { channel = 1, time = 500 } )
+		audio.fadeOut( { channel = 3, time = 333 } )
 	elseif ( phase == "did" ) then
 		
 	end
@@ -419,7 +421,7 @@ end
 
 function scene:destroy( event )
 	audio.stop()  -- Stop all audio
-	audio.dispose( bgMusic )  -- Release music handle
+	-- audio.dispose( bgMusic )  -- Release music handle
 end
 
 

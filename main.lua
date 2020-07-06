@@ -50,7 +50,7 @@ end
 system.activate("multitouch")
 
 -- reserve music channel
-audio.reserveChannels(1)
+audio.reserveChannels(4)
 
 -- go to menu screen
 -- composer.gotoScene( "menu" )

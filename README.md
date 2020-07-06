@@ -35,11 +35,16 @@ O jogo é controlado por toques na tela em lugares específicos.
 
 ![Tela Conceitual](https://raw.githubusercontent.com/thiagoa1/RitmoDaNoite/master/ritmo%20-%20mockup.png)  
 
+* Assinatura Digital:
+keytool -genkey -v -keystore corona.keystore -alias corona -keyalg RSA -validity 999999
+pass: 1-6
+
 * Música Intro
 (https://www.beepbox.co/#7n31s0k0l00e03t2Qm0a7g0fj7i0r1o3210T0v0u00q1d6f9y2z1C0w5c1h2T1v0uc4q1d2fay0z1C0c1A0F4B4V1Q5000Pff00E0111T1v0u37q1d1f6y1z6C1c0AbF6B0V1Q07beP9996E0006T2v0u15q0d1f8y0z1C2w0b4h8h4h4h4h4h4h4h4h4h4h4h4h4h4h4h4h4h4h4h4h4p1RAqqfEzEG8Wbie18UDEAidCzVGhSWhVd97APCAtp7CnASRplw00000)
 
 * Logo
-https://www.brandcrowd.com/maker/logo/2aed9145-e243-41af-8db1-ed0f8e6a6f10
+https://engfto.com/index/generator_reality_glow_text_neon_effect/0-96
+
 
 <a href="https://www.freepik.com/free-photos-vectors/abstract">Abstract vector created by freepik - www.freepik.com</a>
 
@@ -51,7 +56,7 @@ http://pixelgameart.org/web/portfolio/warped-city/
 
 https://engfto.com/index/animated_neon_text_maker/0-27  
 
-https://engfto.com/index/generator_reality_glow_text_neon_effect/0-96
+https://www.brandcrowd.com/maker/logo/2aed9145-e243-41af-8db1-ed0f8e6a6f10
 
 * Música
 https://freemusicarchive.org/music/sawsquarenoise/Towel_Defence_OST
